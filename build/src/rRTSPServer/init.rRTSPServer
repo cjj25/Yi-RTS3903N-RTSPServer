@@ -1,0 +1,36 @@
+#!/bin/bash
+
+ARCHIVE=live.2021.04.06.tar.gz
+
+export TARGET=mips-linux-uclibc
+export CROSS=mips-linux-uclibc
+export BUILD=x86_64-pc-linux-gnu
+
+export CROSSPREFIX=${CROSS}-
+
+export STRIP=${CROSSPREFIX}strip
+export CXX=${CROSSPREFIX}g++
+export CC=${CROSSPREFIX}gcc
+export LD=${CROSSPREFIX}ld
+export AS=${CROSSPREFIX}as
+export AR=${CROSSPREFIX}ar
+
+SCRIPT_DIR=$(cd `dirname $0` && pwd)
+cd $SCRIPT_DIR
+
+rm -rf ./_install
+rm -rf ./live
+
+# live555
+if [ ! -f $ARCHIVE ]; then
+    wget https://download.videolan.org/pub/contrib/live555/$ARCHIVE
+fi
+tar zxvf $ARCHIVE
+
+patch -p0 < rRTSPServer.patch
+
+cd live || exit 1
+
+./genMakefiles linux-cross
+cp -f ../Makefile.rRTSPServer Makefile
+cp -rf ../src .
