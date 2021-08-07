@@ -19,7 +19,7 @@ finding similar cameras (TP Link) that had shared the source due to GPL requirem
 - Telnet server open by default (root, no password)
 - WiFi connection without having to go through the initial vendor pairing process
 - Yi Camera
-    - Tested with `7.1.00.25A_202002271051` and
+    - Tested with `7.1.00.25A_202002271051` and `7.1.00.17A_201909271014`
 
 ### TODO:
 - Add audio to the feed
@@ -56,3 +56,7 @@ If this doesn't solve the issue, take a look at the `stream.c` where `sensor_sen
 - The RTSPServer part of this repo was taken from another repo, full credit to be given to: 
   - `roleo` I believe is the original author[?]
   - `alienatedsec` I copied the modified version that repo
+
+## Resources
+- [Toolchain](https://github.com/cjj25/RTS3903N-rsdk-4.8.5-5281)
+- [Compiled binaries / tools for debugging and test](https://github.com/cjj25/RTS3903N-Tools)
