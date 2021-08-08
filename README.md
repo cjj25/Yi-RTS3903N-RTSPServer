@@ -1,6 +1,7 @@
 # RTSPServer for RTS3903N based YI Cameras
 *While this repo is focused on Yi based cameras, it should compile and run on any RTS3903N based camera!*
 
+## Important: Read all instructions on this page, not all devices work straight away.
 ## Background
 It took many hours of research to put this together. The SDK was very hard to find, and I luckily stumbled across it by
 finding similar cameras (TP Link) that had shared the source due to GPL requirements.
@@ -10,9 +11,13 @@ finding similar cameras (TP Link) that had shared the source due to GPL requirem
 ## Getting Started
 - Download the latest zip from the releases page
 - Extract the contents to the root of a MicroSD card (minimum 2GB) that is FAT32 partitioned
-- (Optional) If you're using WiFi, edit Factory/wpa_supplicant.conf and add your WiFi credentials
-- Connect to RTSP via `rtsp://[YOUR_CAMERA_IP]/ch0_0.h264`
-- Does the picture look normal? No, see troubleshooting below
+- **Important**: If you're using WiFi, edit `Factory/wpa_supplicant.conf` and add your WiFi credentials. 
+  - **Only replace SSID_NAME_OF_WIFI and WIFI_SECRET_KEY, unless you're using WEP encryption or open**
+- Insert the SD, turn on the camera and wait 15 seconds, try connect to RTSP via `rtsp://[YOUR_CAMERA_IP]/ch0_0.h264`
+    - RTSP Available but have quality issues? see: Troubleshooting, Video Quality and Developers/Copmpiling below
+    - It's not working? You may have an earlier FW that requires a different payload
+      - **Rename the `Factory` folder on the SD card to `Factory.old`**
+        - Restart the device and try connect again
 
 ### What's Working
 - H264 encoded stream via `rtsp://[YOUR_CAMERA_IP]/ch0_0.h264`
