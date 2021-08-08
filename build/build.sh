@@ -37,9 +37,14 @@ fi
 cp -R root/Factory .
 cp *.conf *.sh Factory/
 chmod +x Factory/*
+cp -R wifi /to_build/to_sd/
+chmod +x /to_build/to_sd/wifi/*
+cp -R Yi /to_build/to_sd/
+chmod +x /to_build/to_sd/Yi/*
 mv Factory /to_build/to_sd/ && chmod +x /to_build/to_sd/
 cd /to_build/to_sd/
-tar cvzf /to_build/release/Yi-RTS3903N-RTSPServerV01.tar.gz .
+chmod -R 777 *
+tar cvzf /to_build/release/Yi-RTS3903N-RTSPServerV02.tar.gz .
 
 
 	
