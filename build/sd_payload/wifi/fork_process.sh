@@ -22,8 +22,7 @@ if [ -f /var/tmp/sd/Factory/wpa_supplicant.conf ]; then
 fi
 
 
-udhcpc -i wlan0 -b -s "${DEFAULT_SCRIPT}"
-sleep 10s
+udhcpc -i wlan0 -b -s "${DEFAULT_SCRIPT}" &
 
 cd /var/tmp/sd/
 
@@ -39,9 +38,9 @@ mount --bind /var/tmp/sd/localko /home/app/localko
 /var/tmp/sd/Yi/load_cpld_ssp
 
 if test -f "/tmp/sd/invert_adc"; then
-    ./stream 1 2>&1 &
+    ./stream 1 &
 else
-    ./stream 2>&1 &
+    ./stream &
 fi
-./rRTSPServer -d >/var/tmp/sd/rtspServerLog 2>&1
+./rRTSPServer -d >/var/tmp/rtspServerLog 2>&1
 

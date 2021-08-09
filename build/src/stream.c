@@ -155,15 +155,18 @@ static void day_mode_or_night_mode() {
             detected_night = 0;
         }
     }
+    //RTS_INFO("Mode debug %d %d %d", detected_night, adc_value, night);
     // We have detected darkness
     // We store the state of the camera's current nightmode in night
     if (night != 1 && detected_night == 1) {
         manage_modes(RTS_VIDEO_CTRL_ID_GRAY_MODE, 1);
         manage_modes(RTS_VIDEO_CTRL_ID_IR_MODE, 2);
+	//RTS_INFO("Night mode\n");
         manage_ir_cut(1);
         night = 1;
     } else if (night != 0 && detected_night == 0) {
         // We have detected light
+	//RTS_INFO("Day mode\n");
         manage_modes(RTS_VIDEO_CTRL_ID_GRAY_MODE, 0);
         manage_modes(RTS_VIDEO_CTRL_ID_IR_MODE, 0);
         manage_ir_cut(0);
@@ -174,6 +177,8 @@ static void day_mode_or_night_mode() {
 
 static void isp_ctrl() {
     RTS_INFO("Control thread started\n");
+    // Wait for any other apps controlling the IR cut to end
+    sleep(30);
     while (!g_exit) {
         day_mode_or_night_mode();
         sleep(3);
@@ -281,6 +286,7 @@ int start_stream() {
 
         rts_isp_v4l2_close(vfd);
     }
+    // Toggle IR Cut at startup (disabled as of V03 as dispatch binary does this auto)
     manage_ir_cut(1); // Always start as if it was day time
     while (!g_exit) {
 
