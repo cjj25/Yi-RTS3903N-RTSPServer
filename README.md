@@ -28,7 +28,7 @@ finding similar cameras (TP Link) that had shared the source due to GPL requirem
   5. The stream grabber will start and the RTSPServer ***(don't try to connect too quickly - bug)***
   6. You'll probably have a pinkish tint on the picture, the IR cut (blocking IR light) will be performed after ***30 seconds*** to ensure any other binaries have finished taking control of the IR Cut
      >If the image isn't quite right (grey / too much pink), place your finger over the sensor on the front (make it very dark) and see what happens. If the logic is inverted, rename `invert_adc_rename_me` to `invert_adc` and restart the camera.
-  7. Connect to RTSP via `rtsp://[YOUR_CAMERA_IP]/ch-1_0.h264`
+  7. Connect to RTSP via `rtsp://[YOUR_CAMERA_IP]/ch0_0.h264`
 
 ### What's Working
 - H264 encoded stream via `rtsp://[YOUR_CAMERA_IP]/ch0_0.h264`
