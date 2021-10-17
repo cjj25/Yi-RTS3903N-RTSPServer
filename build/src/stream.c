@@ -136,37 +136,54 @@ int manage_modes(enum enum_rts_video_ctrl_id type, int value) {
 }
 
 static void day_mode_or_night_mode() {
+    int hysteresisOn = 2500;
+    int hysteresisOff = 500;
+
     // We need to read the ADC (Light Sensor) first
-    int adc_value;
-    adc_value = rts_io_adc_get_value(ADC_CHANNEL_0);
+    // Looks like it returns 3297 in total darkness,
+    // and double digit values (<100) in just a little bit of light.
+    // The ADC is very noisy, so we sample 10 times and use the average value.
+    int adc_value = 0;
+    int i;
+    for(i=0; i<10; i++) {
+        adc_value += rts_io_adc_get_value(ADC_CHANNEL_0);
+        usleep(100000); // 100ms * 10 = 1s
+    }
+    adc_value = adc_value/10;
+
     int detected_night = 0;
-    int sensor_sensitivity = 2000;
+    int detected_day = 0;
+
     if (arg_amount > 1) {
         // Inverted light detection logic provided
-        if (adc_value > sensor_sensitivity) {
-            detected_night = 0;
-        } else {
+        if (adc_value < hysteresisOff) {
             detected_night = 1;
         }
+        if (adc_value > hysteresisOn) {
+            detected_day = 1;
+        }
+
     } else {
-        if (adc_value > sensor_sensitivity) {
+        if (adc_value < hysteresisOff) {
+            detected_day = 1;
+        }
+        if (adc_value > hysteresisOn) {
             detected_night = 1;
-        } else {
-            detected_night = 0;
         }
     }
-    //RTS_INFO("Mode debug %d %d %d", detected_night, adc_value, night);
+
+    // RTS_INFO("Mode debug day=%d night=%d adc=%d night=%d", detected_night, detected_day, adc_value, night);
     // We have detected darkness
     // We store the state of the camera's current nightmode in night
     if (night != 1 && detected_night == 1) {
         manage_modes(RTS_VIDEO_CTRL_ID_GRAY_MODE, 1);
         manage_modes(RTS_VIDEO_CTRL_ID_IR_MODE, 2);
-	//RTS_INFO("Night mode\n");
+        // RTS_INFO("Night mode\n");
         manage_ir_cut(1);
         night = 1;
-    } else if (night != 0 && detected_night == 0) {
+    } else if (night != 0 && detected_day == 1) {
         // We have detected light
-	//RTS_INFO("Day mode\n");
+        // RTS_INFO("Day mode\n");
         manage_modes(RTS_VIDEO_CTRL_ID_GRAY_MODE, 0);
         manage_modes(RTS_VIDEO_CTRL_ID_IR_MODE, 0);
         manage_ir_cut(0);
