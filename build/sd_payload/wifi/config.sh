@@ -35,6 +35,8 @@ do
 done
 # You probably want to change this file content with your own resolvers
 cp -f /var/nm/resolv.conf /etc/
+# Now copy our own etc/ data
+cp -rf ${fetc}/own/* ${fetc}/
 
 # Fork our script to run in the background
 /var/tmp/sd/wifi/fork_process.sh 2>&1 &
