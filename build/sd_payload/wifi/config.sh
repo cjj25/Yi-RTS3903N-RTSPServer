@@ -23,6 +23,21 @@ if [ ! -f /var/tmp/sd/backup/mtdblock0.bin  ]; then
      kill_cloud
 fi
 
+# Make /etc writable (so we can set a root password)
+fetc=/var/tmp/sd/etc
+mkdir -p ${fetc}
+cp -r /etc/* ${fetc}/
+mount --bind ${fetc} /etc
+# FAT32 does not support logical links
+for f in cron dnrd ppp
+do
+    touch /etc/${f}
+done
+# You probably want to change this file content with your own resolvers
+cp -f /var/nm/resolv.conf /etc/
+# Now copy our own etc/ data
+cp -rf ${fetc}/own/* ${fetc}/
+
 # Fork our script to run in the background
 /var/tmp/sd/wifi/fork_process.sh 2>&1 &
 kill_cloud
